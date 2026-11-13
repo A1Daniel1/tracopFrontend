@@ -1,0 +1,131 @@
+name: Deploy frontend to S3
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tracop-frontend-production
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      AWS_REGION: us-east-1
+      S3_BUCKET: tracop-web-dev-us-east-1
+      AWS_EC2_METADATA_DISABLED: "true"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.3
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Type check
+        run: pnpm typecheck
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Build production bundle
+        run: pnpm build
+
+      - name: Validate build output and deployment configuration
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$S3_BUCKET" = "tracop-web-dev-us-east-1" || {
+            echo "Unexpected S3 destination; refusing deployment." >&2
+            exit 1
+          }
+          test "$AWS_REGION" = "us-east-1" || {
+            echo "Unexpected AWS region; refusing deployment." >&2
+            exit 1
+          }
+          test -s dist/index.html || {
+            echo "dist/index.html is missing or empty." >&2
+            exit 1
+          }
+          if [ -n "${VITE_USE_MOCK:-}" ] && [ "$VITE_USE_MOCK" != "true" ] && [ "$VITE_USE_MOCK" != "false" ]; then
+            echo "VITE_USE_MOCK must be true or false when set." >&2
+            exit 1
+          fi
+          echo "Validated dist/ for s3://$S3_BUCKET in $AWS_REGION."
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Verify AWS identity and bucket access
+        shell: bash
+        run: |
+          set -euo pipefail
+          aws sts get-caller-identity >/dev/null
+          aws s3api head-bucket --bucket "$S3_BUCKET"
+
+      - name: Upload application assets
+        run: >-
+          aws s3 sync dist/ "s3://${S3_BUCKET}/"
+          --region "$AWS_REGION"
+          --exclude "index.html"
+          --cache-control "public,max-age=31536000,immutable"
+
+      - name: Upload entry point
+        run: >-
+          aws s3 cp dist/index.html "s3://${S3_BUCKET}/index.html"
+          --region "$AWS_REGION"
+          --content-type "text/html; charset=utf-8"
+          --cache-control "no-cache,no-store,must-revalidate"
+
+      - name: Verify published entry point
+        shell: bash
+        run: |
+          set -euo pipefail
+          aws s3api head-object --bucket "$S3_BUCKET" --key index.html >/dev/null
+
+      - name: Check website over HTTP
+        shell: bash
+        run: |
+          set -euo pipefail
+          url="http://${S3_BUCKET}.s3-website-${AWS_REGION}.amazonaws.com/"
+          for attempt in {1..6}; do
+            if curl --fail --silent --show-error --max-time 15 "$url" -o /tmp/tracop-index.html; then
+              if grep -q '<div id="root"' /tmp/tracop-index.html; then
+                echo "Website returned the expected application shell: $url"
+                exit 0
+              fi
+              echo "Website responded but did not return the expected Vite application shell." >&2
+              exit 1
+            fi
+            if [ "$attempt" -lt 6 ]; then
+              sleep 5
+            fi
+          done
+          echo "Website check failed. Confirm S3 static website hosting and public read access are configured." >&2
+          exit 1
