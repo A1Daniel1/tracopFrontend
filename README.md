@@ -13,15 +13,20 @@ Key product capabilities:
 
 The UI is entirely in **Spanish** (`es`). All user-facing copy, labels, and messages must be written in Spanish.
 
+## Requirements
+
+- Node.js 22+ (see `.mise.toml`)
+- pnpm 10+
+
 ## Commands
 
 Run with `pnpm`:
 
 | Command | Description |
 | --- | --- |
-| `pnpm dev` | Start the Vite dev server (default port `8443`) |
+| `pnpm dev` | Start the Vite dev server (default port `5173`) |
 | `pnpm build` | Production build into `dist/` |
-| `pnpm preview` | Serve the production build locally (default port `8443`) |
+| `pnpm preview` | Serve the production build locally (default port `4173`) |
 | `pnpm format` | Format the project with oxfmt |
 
 ## Git workflow
@@ -30,7 +35,6 @@ Run with `pnpm`:
 - Create a `feature/<name>` branch off `develop`; merge it back to `develop` when done. `develop` is promoted to `main` on release.
 - Use Conventional Commits: `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `style:`, `test:`, `build:`, `ci:`, `perf:`.
 - Keep commits small and focused.
-- Do **not** push unless explicitly asked.
 
 ## Security
 
@@ -50,12 +54,12 @@ An order (pedido) progresses through these states, in order:
 ## Project structure
 
 - `src/main.tsx` - React entrypoint; imports `src/index.css` and mounts `src/App.tsx` into the `#root` element.
-- `src/App.tsx` - Primary application component. This is currently a monolithic Figma Make export (single file) holding every screen and the role-based flow. When adding features, extract components rather than growing this file further.
+- `src/App.tsx` - Primary application component. This is currently a single large file holding every screen and the role-based flow. When adding features, extract components rather than growing this file further.
 - `src/index.css` - Global CSS entrypoint and Tailwind CSS v4 import.
 - `index.html` - Vite HTML shell containing the `#root` element and loading `src/main.tsx`.
 - `package.json` - Project dependencies and scripts.
-- `vite.config.ts` - Vite config (React, Tailwind v4, Figma Make plugins, and the `@` → `src` alias). It imports `.figma/make/site.json`, so the `.figma/` folder must remain present for builds.
-- `.mise.toml` - Toolchain versions (Node 22, pnpm 10.34.3).
+- `vite.config.ts` - Vite config (React, Tailwind v4, and the `@` → `src` alias).
+- `.mise.toml` - Toolchain versions (Node 22, pnpm 10).
 
 ## Dependencies
 
