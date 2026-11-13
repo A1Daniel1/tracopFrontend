@@ -13,7 +13,7 @@
   --cream: #faf8f2;
   --paper: #fffefa;
   --ink: #1e2b24;
-  --muted: #68736c;
+  --muted: #4f5d55;
   --line: #e2e5df;
   --red: #b9463c;
   --shadow: 0 10px 28px rgba(30, 54, 40, 0.09);
@@ -100,7 +100,7 @@
   gap: 7px;
   background: var(--ochre-soft);
   color: var(--ochre-dark);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 800;
 }
 .network-banner span {
@@ -229,13 +229,13 @@
 .bottom-nav button {
   border: 0;
   background: none;
-  color: #748078;
+  color: #4f5d55;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 3px;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 800;
   border-radius: 12px;
 }
@@ -257,7 +257,7 @@
   justify-content: center;
   gap: 9px;
   font-weight: 900;
-  font-size: 15px;
+  font-size: 16px;
   transition: transform 0.15s;
 }
 .btn:active {
@@ -326,7 +326,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 800;
   white-space: nowrap;
 }
@@ -431,11 +431,11 @@
 }
 .role-list small {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 13px;
 }
 .role-list svg:last-child {
   width: 19px;
-  color: #78847d;
+  color: #55635b;
 }
 .role-icon {
   width: 48px;
@@ -916,12 +916,12 @@
   grid-template-columns: 1fr 1fr;
 }
 .tabs button {
-  min-height: 44px;
+  min-height: 48px;
   border: 0;
   border-bottom: 3px solid transparent;
   background: none;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 800;
 }
 .tabs button.active {
@@ -940,19 +940,19 @@
   justify-content: space-between;
   align-items: center;
   margin: 12px 0;
-  font-size: 11px;
+  font-size: 13px;
   color: var(--muted);
 }
 .list-heading button,
 .catalog-head button {
-  min-height: 36px;
+  min-height: 48px;
   border: 1px solid var(--line);
   border-radius: 10px;
   background: white;
   display: flex;
   gap: 5px;
   align-items: center;
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 800;
 }
 .list-heading svg {
@@ -1123,15 +1123,15 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  color: #7e8982;
+  color: #55635b;
   background: #e6e9e6;
   border: 2px solid white;
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 900;
 }
 .step small {
-  font-size: 7px;
-  color: #89928c;
+  font-size: 11px;
+  color: #55635b;
   white-space: nowrap;
 }
 .step.done > span {
@@ -1153,8 +1153,8 @@
 }
 .status-panel > p {
   margin: 0;
-  color: #b9d6c5;
-  font-size: 9px;
+  color: #c8ddcf;
+  font-size: 12px;
   font-weight: 900;
   letter-spacing: 0.08em;
 }
@@ -1446,13 +1446,13 @@
   margin: 12px 0;
 }
 .category-scroll button {
-  min-height: 37px;
-  padding: 0 14px;
+  min-height: 48px;
+  padding: 0 18px;
   border: 1px solid var(--line);
   border-radius: 99px;
   background: white;
   white-space: nowrap;
-  font-size: 10px;
+  font-size: 13px;
   font-weight: 800;
 }
 .category-scroll button.active {
@@ -2555,4 +2555,100 @@
     border-radius: 0;
     box-shadow: none;
   }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+.confirm-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(18, 40, 30, 0.5);
+}
+.confirm-sheet {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  padding: 24px 18px 18px;
+  border-radius: 18px;
+  background: var(--paper);
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(18, 40, 30, 0.32);
+}
+.confirm-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  display: grid;
+  place-items: center;
+}
+.confirm-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--ochre-dark);
+  background: var(--ochre-soft);
+}
+.confirm-sheet h2 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  color: var(--ink);
+}
+.confirm-sheet p {
+  margin: 0 0 18px;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+.confirm-actions {
+  display: grid;
+  gap: 8px;
+}
+.confirm-actions .btn {
+  min-height: 48px;
+}
+
+.estado-vacio {
+  padding: 44px 20px;
+  text-align: center;
+  color: var(--muted);
+}
+.estado-vacio span {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--green-700);
+  background: var(--green-100);
+}
+.estado-vacio h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  color: var(--ink);
+}
+.estado-vacio p {
+  margin: 0 0 16px;
+  font-size: 14px;
+  line-height: 1.45;
 }
