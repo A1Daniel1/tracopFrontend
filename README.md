@@ -22,12 +22,12 @@ The UI is entirely in **Spanish** (`es`). All user-facing copy, labels, and mess
 
 Run with `pnpm`:
 
-| Command | Description |
-| --- | --- |
-| `pnpm dev` | Start the Vite dev server (default port `5173`) |
-| `pnpm build` | Production build into `dist/` |
+| Command        | Description                                              |
+| -------------- | -------------------------------------------------------- |
+| `pnpm dev`     | Start the Vite dev server (default port `5173`)          |
+| `pnpm build`   | Production build into `dist/`                            |
 | `pnpm preview` | Serve the production build locally (default port `4173`) |
-| `pnpm format` | Format the project with oxfmt |
+| `pnpm format`  | Format the project with oxfmt                            |
 
 ## Git workflow
 

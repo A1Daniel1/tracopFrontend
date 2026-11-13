@@ -46,7 +46,8 @@
   justify-content: center;
   gap: 42px;
   padding: 30px;
-  background: radial-gradient(circle at 30% 10%, #f3f2e8 0, transparent 38%), #dce4dc;
+  background:
+    radial-gradient(circle at 30% 10%, #f3f2e8 0, transparent 38%), #dce4dc;
 }
 .phone-frame {
   position: relative;
@@ -360,7 +361,11 @@
 .splash-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(9, 47, 30, 0.05), rgba(9, 47, 30, 0.78));
+  background: linear-gradient(
+    180deg,
+    rgba(9, 47, 30, 0.05),
+    rgba(9, 47, 30, 0.78)
+  );
 }
 .brand-lockup {
   position: absolute;

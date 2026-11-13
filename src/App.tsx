@@ -113,20 +113,29 @@ function Button({
   disabled?: boolean;
 }) {
   return (
-    <button className={`btn btn-${variant} ${className}`} onClick={onClick} disabled={disabled}>
+    <button
+      className={`btn btn-${variant} ${className}`}
+      onClick={onClick}
+      disabled={disabled}
+    >
       {icon}
       <span>{children}</span>
     </button>
   );
 }
 
-function SyncChip({ state = "saved" }: { state?: "saved" | "pending" | "synced" }) {
+function SyncChip({
+  state = "saved",
+}: {
+  state?: "saved" | "pending" | "synced";
+}) {
   const labels = {
     saved: "Guardado en el teléfono",
     pending: "Pendiente de sincronizar",
     synced: "Sincronizado",
   };
-  const Icon = state === "synced" ? Check : state === "pending" ? Clock3 : CloudOff;
+  const Icon =
+    state === "synced" ? Check : state === "pending" ? Clock3 : CloudOff;
   return (
     <span className={`sync-chip sync-${state}`}>
       <Icon size={13} /> {labels[state]}
@@ -198,7 +207,11 @@ function Header({
         </div>
       )}
       {back && <h1>{title}</h1>}
-      <button className="icon-btn notification-btn" onClick={onBell} aria-label="Notificaciones">
+      <button
+        className="icon-btn notification-btn"
+        onClick={onBell}
+        aria-label="Notificaciones"
+      >
         <Bell />
         <i />
       </button>
@@ -206,19 +219,33 @@ function Header({
   );
 }
 
-function OfflineBanner({ offline, toggle }: { offline: boolean; toggle: () => void }) {
+function OfflineBanner({
+  offline,
+  toggle,
+}: {
+  offline: boolean;
+  toggle: () => void;
+}) {
   return (
-    <button className={`network-banner ${offline ? "" : "online"}`} onClick={toggle}>
+    <button
+      className={`network-banner ${offline ? "" : "online"}`}
+      onClick={toggle}
+    >
       {offline ? <WifiOff size={17} /> : <Wifi size={17} />}
       <span>
-        {offline ? "Sin conexión · Puedes seguir trabajando" : "Con conexión · Todo sincronizado"}
+        {offline
+          ? "Sin conexión · Puedes seguir trabajando"
+          : "Con conexión · Todo sincronizado"}
       </span>
       <b>{offline ? "Ver" : "Listo"}</b>
     </button>
   );
 }
 
-const navItems: Record<Role, { label: string; icon: typeof Home; screen: Screen }[]> = {
+const navItems: Record<
+  Role,
+  { label: string; icon: typeof Home; screen: Screen }[]
+> = {
   productor: [
     { label: "Inicio", icon: Home, screen: "home" },
     { label: "Ofertas", icon: Store, screen: "offers" },
@@ -239,7 +266,15 @@ const navItems: Record<Role, { label: string; icon: typeof Home; screen: Screen 
   ],
 };
 
-function BottomNav({ role, screen, go }: { role: Role; screen: Screen; go: (s: Screen) => void }) {
+function BottomNav({
+  role,
+  screen,
+  go,
+}: {
+  role: Role;
+  screen: Screen;
+  go: (s: Screen) => void;
+}) {
   return (
     <nav className="bottom-nav">
       {navItems[role].map(({ label, icon: Icon, screen: destination }) => (
@@ -258,7 +293,11 @@ function BottomNav({ role, screen, go }: { role: Role; screen: Screen; go: (s: S
 
 function RoleSelection({ choose }: { choose: (role: Role) => void }) {
   const roles: { role: Role; copy: string; icon: typeof Leaf }[] = [
-    { role: "productor", copy: "Publica cosechas y recibe pedidos", icon: Leaf },
+    {
+      role: "productor",
+      copy: "Publica cosechas y recibe pedidos",
+      icon: Leaf,
+    },
     { role: "comprador", copy: "Encuentra productos de origen", icon: Store },
     { role: "transportista", copy: "Lleva cosechas por Colombia", icon: Truck },
   ];
@@ -293,13 +332,23 @@ function RoleSelection({ choose }: { choose: (role: Role) => void }) {
             </button>
           ))}
         </div>
-        <p className="legal">Al continuar aceptas el tratamiento de datos de TRACOP.</p>
+        <p className="legal">
+          Al continuar aceptas el tratamiento de datos de TRACOP.
+        </p>
       </div>
     </div>
   );
 }
 
-function Login({ role, enter, back }: { role: Role; enter: () => void; back: () => void }) {
+function Login({
+  role,
+  enter,
+  back,
+}: {
+  role: Role;
+  enter: () => void;
+  back: () => void;
+}) {
   return (
     <div className="auth-screen">
       <button className="icon-btn auth-back" onClick={back}>
@@ -322,7 +371,8 @@ function Login({ role, enter, back }: { role: Role; enter: () => void; back: () 
       <div className="offline-promise">
         <CloudOff />
         <span>
-          <b>Funciona sin internet</b>Lo que hagas se enviará cuando vuelva la señal.
+          <b>Funciona sin internet</b>Lo que hagas se enviará cuando vuelva la
+          señal.
         </span>
       </div>
     </div>
@@ -360,7 +410,11 @@ function ProducerHome({ go }: { go: (s: Screen) => void }) {
         </span>
         <ChevronRight />
       </button>
-      <SectionTitle title="Pedidos por responder" action="Ver todos" onClick={() => go("orders")} />
+      <SectionTitle
+        title="Pedidos por responder"
+        action="Ver todos"
+        onClick={() => go("orders")}
+      />
       <button className="order-card" onClick={() => go("order-detail")}>
         <div className="order-top">
           <span className="produce-icon">A</span>
@@ -402,7 +456,8 @@ function Publish({ go }: { go: (s: Screen) => void }) {
       <div className="tip-card">
         <Sparkles />
         <span>
-          <b>Habla con tus palabras</b>Di producto, cantidad, precio y dónde estás.
+          <b>Habla con tus palabras</b>Di producto, cantidad, precio y dónde
+          estás.
         </span>
       </div>
       <div className={`recorder ${recording ? "recording" : ""}`}>
@@ -456,7 +511,8 @@ function ConfirmOffer({ go }: { go: (s: Screen) => void }) {
       <div className="ai-banner">
         <Sparkles />
         <span>
-          <b>La IA organizó tu oferta</b>Revisa que todo esté bien antes de publicar.
+          <b>La IA organizó tu oferta</b>Revisa que todo esté bien antes de
+          publicar.
         </span>
       </div>
       <div className="offer-preview">
@@ -483,7 +539,13 @@ function ConfirmOffer({ go }: { go: (s: Screen) => void }) {
   );
 }
 
-function OfferCard({ go, synced = false }: { go: (s: Screen) => void; synced?: boolean }) {
+function OfferCard({
+  go,
+  synced = false,
+}: {
+  go: (s: Screen) => void;
+  synced?: boolean;
+}) {
   return (
     <button className="offer-card" onClick={() => go("offer-detail")}>
       <img src={producePhoto} alt="Producto fresco" />
@@ -572,7 +634,10 @@ function Orders({ role, go }: { role: Role; go: (s: Screen) => void }) {
             : "Llega hoy entre 3:00 y 4:00 p. m."}
         </p>
       </button>
-      <button className="order-list-card muted-card" onClick={() => go("order-detail")}>
+      <button
+        className="order-list-card muted-card"
+        onClick={() => go("order-detail")}
+      >
         <div className="order-id">
           <span>Pedido #TR-269</span>
           <SyncChip state="pending" />
@@ -618,10 +683,15 @@ function OrderDetail({ role, go }: { role: Role; go: (s: Screen) => void }) {
         <hr />
         <p>
           <UserRound />{" "}
-          {role === "comprador" ? "Productora: María González" : "Comprador: Mercado La 14"}
+          {role === "comprador"
+            ? "Productora: María González"
+            : "Comprador: Mercado La 14"}
         </p>
         <p>
-          <MapPin /> {role === "comprador" ? "Filandia → Armenia" : "Entrega en Armenia, Quindío"}
+          <MapPin />{" "}
+          {role === "comprador"
+            ? "Filandia → Armenia"
+            : "Entrega en Armenia, Quindío"}
         </p>
         <p>
           <Clock3 /> Miércoles 19 de junio, 8:00 a. m.
@@ -632,7 +702,8 @@ function OrderDetail({ role, go }: { role: Role; go: (s: Screen) => void }) {
           <div className="counteroffer">
             <MessageCircle />
             <span>
-              <b>Contraoferta recibida</b>María propone entregar el jueves por la mañana.
+              <b>Contraoferta recibida</b>María propone entregar el jueves por
+              la mañana.
             </span>
             <button>Aceptar</button>
           </div>
@@ -660,7 +731,9 @@ function OrderDetail({ role, go }: { role: Role; go: (s: Screen) => void }) {
         <>
           <div className="action-note">
             <b>Responde antes de las 4:30 p. m.</b>
-            <span>El comprador recibirá tu respuesta cuando vuelva la señal.</span>
+            <span>
+              El comprador recibirá tu respuesta cuando vuelva la señal.
+            </span>
           </div>
           <Button onClick={() => setAccepted(true)} icon={<Check />}>
             {accepted ? "Pedido aceptado" : "Aceptar pedido"}
@@ -670,7 +743,11 @@ function OrderDetail({ role, go }: { role: Role; go: (s: Screen) => void }) {
             <Button variant="secondary">Cambiar fecha</Button>
           </div>
           {accepted && (
-            <Button variant="secondary" onClick={() => go("freight")} icon={<Truck />}>
+            <Button
+              variant="secondary"
+              onClick={() => go("freight")}
+              icon={<Truck />}
+            >
               Asignar transportista
             </Button>
           )}
@@ -863,7 +940,11 @@ function Rating({ go }: { go: (s: Screen) => void }) {
         <h2>¿Cómo te fue con María?</h2>
         <div className="stars">
           {[1, 2, 3, 4, 5].map((n) => (
-            <button onClick={() => setRating(n)} className={n <= rating ? "active" : ""} key={n}>
+            <button
+              onClick={() => setRating(n)}
+              className={n <= rating ? "active" : ""}
+              key={n}
+            >
               <Star />
             </button>
           ))}
@@ -879,7 +960,7 @@ function Rating({ go }: { go: (s: Screen) => void }) {
   );
 }
 
-function Loads({ go }: { go: (s: Screen) => void }) {
+function Loads() {
   const [offer, setOffer] = useState(false);
   return (
     <>
@@ -1238,13 +1319,18 @@ function VoicePrices() {
         </div>
       </div>
       <div className="chat-date">HOY</div>
-      <div className="bubble user">¿A cómo está el aguacate Hass en el Quindío?</div>
+      <div className="bubble user">
+        ¿A cómo está el aguacate Hass en el Quindío?
+      </div>
       <div className="bubble bot">
         <b>Precio de referencia hoy</b>
         <h2>
           $7.100 – $7.800 <small>/ kg</small>
         </h2>
-        <p>En plazas y ofertas cercanas a Armenia. Tu precio de $7.400 está dentro del rango.</p>
+        <p>
+          En plazas y ofertas cercanas a Armenia. Tu precio de $7.400 está
+          dentro del rango.
+        </p>
         <small>
           <Clock3 /> Datos guardados a las 6:00 a. m.
         </small>
@@ -1257,10 +1343,15 @@ function VoicePrices() {
         <button>Tomate en Armenia</button>
       </div>
       <div className="chat-input">
-        <button className={listening ? "active" : ""} onClick={() => setListening(!listening)}>
+        <button
+          className={listening ? "active" : ""}
+          onClick={() => setListening(!listening)}
+        >
           <Mic />
         </button>
-        <span>{listening ? "Escuchando…" : "Mantén presionado para hablar"}</span>
+        <span>
+          {listening ? "Escuchando…" : "Mantén presionado para hablar"}
+        </span>
       </div>
     </div>
   );
@@ -1284,7 +1375,10 @@ function StateGallery() {
           <WifiOff />
         </span>
         <h3>No pudimos actualizar</h3>
-        <p>Tus datos guardados siguen disponibles. Intenta de nuevo cuando tengas señal.</p>
+        <p>
+          Tus datos guardados siguen disponibles. Intenta de nuevo cuando tengas
+          señal.
+        </p>
         <Button variant="secondary">Intentar de nuevo</Button>
       </div>
       <SectionTitle title="Cargando" />
@@ -1399,14 +1493,27 @@ function App() {
     if (previous) {
       setHistory((h) => h.slice(0, -1));
       setScreen(previous);
-    } else setScreen(role === "productor" ? "home" : role === "comprador" ? "catalog" : "loads");
+    } else
+      setScreen(
+        role === "productor"
+          ? "home"
+          : role === "comprador"
+            ? "catalog"
+            : "loads",
+      );
   };
   const chooseRole = (nextRole: Role) => {
     setRole(nextRole);
     setScreen("login");
   };
   const enter = () =>
-    setScreen(role === "productor" ? "home" : role === "comprador" ? "catalog" : "loads");
+    setScreen(
+      role === "productor"
+        ? "home"
+        : role === "comprador"
+          ? "catalog"
+          : "loads",
+    );
   const rootScreens: Screen[] = [
     "home",
     "offers",
@@ -1423,18 +1530,21 @@ function App() {
   let content: ReactNode;
   if (screen === "roles") content = <RoleSelection choose={chooseRole} />;
   else if (screen === "login")
-    content = <Login role={role} enter={enter} back={() => setScreen("roles")} />;
+    content = (
+      <Login role={role} enter={enter} back={() => setScreen("roles")} />
+    );
   else if (screen === "home") content = <ProducerHome go={go} />;
   else if (screen === "publish") content = <Publish go={go} />;
   else if (screen === "confirm-offer") content = <ConfirmOffer go={go} />;
   else if (screen === "offers") content = <Offers go={go} />;
   else if (screen === "orders") content = <Orders role={role} go={go} />;
-  else if (screen === "order-detail") content = <OrderDetail role={role} go={go} />;
+  else if (screen === "order-detail")
+    content = <OrderDetail role={role} go={go} />;
   else if (screen === "freight") content = <Freight go={go} />;
   else if (screen === "catalog") content = <Catalog go={go} />;
   else if (screen === "offer-detail") content = <OfferDetail go={go} />;
   else if (screen === "rating") content = <Rating go={go} />;
-  else if (screen === "loads") content = <Loads go={go} />;
+  else if (screen === "loads") content = <Loads />;
   else if (screen === "route") content = <RouteScreen go={go} />;
   else if (screen === "qr") content = <QRScanner go={go} />;
   else if (screen === "tracking") content = <Tracking go={go} />;
@@ -1465,7 +1575,12 @@ function App() {
             <i /> ▰
           </span>
         </div>
-        {shell && <OfflineBanner offline={offline} toggle={() => setOffline(!offline)} />}
+        {shell && (
+          <OfflineBanner
+            offline={offline}
+            toggle={() => setOffline(!offline)}
+          />
+        )}
         {shell && (
           <Header
             title={screenTitles[screen]}
@@ -1476,7 +1591,9 @@ function App() {
           />
         )}
         <div className={`screen-content screen-${screen}`}>{content}</div>
-        {shell && !["qr"].includes(screen) && <BottomNav role={role} screen={screen} go={go} />}
+        {shell && !["qr"].includes(screen) && (
+          <BottomNav role={role} screen={screen} go={go} />
+        )}
       </div>
       <aside className="prototype-note">
         <div>
@@ -1486,8 +1603,8 @@ function App() {
           </span>
         </div>
         <p>
-          Usa los controles del teléfono para recorrer el flujo. Pulsa el banner de conexión para
-          probar ambos estados.
+          Usa los controles del teléfono para recorrer el flujo. Pulsa el banner
+          de conexión para probar ambos estados.
         </p>
         <div className="role-pills">
           {(["productor", "comprador", "transportista"] as Role[]).map((r) => (
@@ -1496,7 +1613,13 @@ function App() {
               key={r}
               onClick={() => {
                 setRole(r);
-                setScreen(r === "productor" ? "home" : r === "comprador" ? "catalog" : "loads");
+                setScreen(
+                  r === "productor"
+                    ? "home"
+                    : r === "comprador"
+                      ? "catalog"
+                      : "loads",
+                );
               }}
             >
               {roleNames[r]}
