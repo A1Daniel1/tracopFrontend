@@ -1,11 +1,13 @@
+import { useState } from "react";
 import { PackageCheck } from "lucide-react";
 import { useNavegacion } from "@/app/useNavegacion";
 import { formatKg } from "@/shared/lib/format";
 import { productoPrincipal } from "@/shared/lib/mock";
-import { Button, SyncChip } from "@/shared/ui";
+import { Button, Confirmar, SyncChip } from "@/shared/ui";
 
 export function Delivery() {
   const go = useNavegacion();
+  const [confirmando, setConfirmando] = useState(false);
 
   return (
     <div className="delivery-screen">
@@ -38,7 +40,15 @@ export function Delivery() {
         </label>
       </div>
       <SyncChip state="guardado" />
-      <Button onClick={() => go("route")}>Confirmar entrega</Button>
+      <Button onClick={() => setConfirmando(true)}>Confirmar entrega</Button>
+      <Confirmar
+        abierto={confirmando}
+        titulo="¿Confirmar la entrega?"
+        descripcion="El pedido quedará marcado como entregado y se notificará al productor."
+        confirmarLabel="Sí, confirmar"
+        onCancelar={() => setConfirmando(false)}
+        onConfirmar={() => go("route")}
+      />
     </div>
   );
 }

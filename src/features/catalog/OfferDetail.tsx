@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Box, ChevronRight, Leaf, MapPin, Star } from "lucide-react";
 import { useNavegacion } from "@/app/useNavegacion";
 import {
@@ -6,10 +7,11 @@ import {
   formatPrecio,
 } from "@/shared/lib/format";
 import { fotos, perfil, productoPrincipal } from "@/shared/lib/mock";
-import { Button } from "@/shared/ui";
+import { Button, Confirmar } from "@/shared/ui";
 
 export function OfferDetail() {
   const go = useNavegacion();
+  const [confirmando, setConfirmando] = useState(false);
 
   return (
     <>
@@ -67,8 +69,16 @@ export function OfferDetail() {
           <span>Total estimado</span>
           <b>{formatPrecio(productoPrincipal.total)}</b>
         </div>
-        <Button onClick={() => go("orders")}>Hacer pedido</Button>
+        <Button onClick={() => setConfirmando(true)}>Hacer pedido</Button>
       </div>
+      <Confirmar
+        abierto={confirmando}
+        titulo="¿Confirmar tu pedido?"
+        descripcion={`Pedirás ${formatKg(productoPrincipal.cantidadKg)} de ${productoPrincipal.nombre} por ${formatPrecio(productoPrincipal.total)}.`}
+        confirmarLabel="Confirmar pedido"
+        onCancelar={() => setConfirmando(false)}
+        onConfirmar={() => go("orders")}
+      />
     </>
   );
 }

@@ -13,12 +13,13 @@ import { useRole } from "@/app/role";
 import { useNavegacion } from "@/app/useNavegacion";
 import { formatKg, formatPrecio } from "@/shared/lib/format";
 import { perfil, productoPrincipal } from "@/shared/lib/mock";
-import { Button, StatusStepper } from "@/shared/ui";
+import { Button, Confirmar, StatusStepper } from "@/shared/ui";
 
 export function OrderDetail() {
   const go = useNavegacion();
   const { rol } = useRole();
   const [accepted, setAccepted] = useState(false);
+  const [confirmando, setConfirmando] = useState(false);
 
   return (
     <>
@@ -100,7 +101,7 @@ export function OrderDetail() {
               El comprador recibirá tu respuesta cuando vuelva la señal.
             </span>
           </div>
-          <Button onClick={() => setAccepted(true)} icon={<Check />}>
+          <Button onClick={() => setConfirmando(true)} icon={<Check />}>
             {accepted ? "Pedido aceptado" : "Aceptar pedido"}
           </Button>
           <div className="counter-row">
@@ -118,6 +119,17 @@ export function OrderDetail() {
           )}
         </>
       )}
+      <Confirmar
+        abierto={confirmando}
+        titulo="¿Aceptar este pedido?"
+        descripcion={`Te comprometes a entregar ${formatKg(productoPrincipal.cantidadKg)} de ${productoPrincipal.nombre} a ${productoPrincipal.comprador}.`}
+        confirmarLabel="Aceptar pedido"
+        onCancelar={() => setConfirmando(false)}
+        onConfirmar={() => {
+          setAccepted(true);
+          setConfirmando(false);
+        }}
+      />
     </>
   );
 }
