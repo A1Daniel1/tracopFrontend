@@ -5,7 +5,6 @@ import {
   ChevronRight,
   MapPin,
   PackageCheck,
-  Store,
   Truck,
   UserRound,
 } from "lucide-react";
@@ -13,10 +12,14 @@ import { useNavegacion } from "@/app/useNavegacion";
 import { formatKg } from "@/shared/lib/format";
 import { productoPrincipal } from "@/shared/lib/mock";
 import { Button, StatusStepper } from "@/shared/ui";
+import { usePendingOperations } from "@/shared/offline/usePendingOperations";
 
 export function Tracking() {
   const go = useNavegacion();
   const [incident, setIncident] = useState(false);
+  const pending = usePendingOperations().filter(
+    (item) => item.dominio === "shipments",
+  );
 
   return (
     <>
@@ -25,31 +28,26 @@ export function Tracking() {
           <Truck />
         </span>
         <div>
-          <p>EN CAMINO</p>
-          <h2>Entrega estimada 8:42 a. m.</h2>
-          <span>Actualizado hace 2 min</span>
+          <p>ESTADO LOCAL</p>
+          <h2>
+            {pending.length
+              ? "Pendiente de confirmación"
+              : "Sin operación activa confirmada"}
+          </h2>
+          <span>El servidor de shipments definirá el estado oficial.</span>
         </div>
       </div>
       <StatusStepper current={2} />
-      <div className="route-map short">
-        <div className="map-roads" />
-        <span className="route-pin truck">
-          <Truck />
-        </span>
-        <span className="route-pin end">
-          <Store />
-        </span>
-      </div>
       <div className="detail-card">
         <p>
           <Box /> Lote {productoPrincipal.lote} ·{" "}
           {formatKg(productoPrincipal.cantidadKg)}
         </p>
         <p>
-          <MapPin /> Mercado La 14, Armenia
+          <MapPin /> Destino pendiente de datos del servicio
         </p>
         <p>
-          <UserRound /> Recibe: Sandra López · 310 555 0182
+          <UserRound /> Receptor pendiente de confirmación
         </p>
       </div>
       {incident && (
