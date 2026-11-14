@@ -24,6 +24,7 @@ export type Pantalla =
 export const rutas = {
   roles: "/",
   login: "/entrar",
+  registro: "/registro",
   menu: "/menu",
   notificaciones: "/notificaciones",
 } as const;

@@ -48,7 +48,7 @@ const menus: Record<Rol, [Pantalla, string, typeof Home][]> = {
 };
 
 export function MenuScreen() {
-  const { rol } = useRole();
+  const { rol, sesion, cerrarSesion } = useRole();
   const go = useNavegacion();
   const navigate = useNavigate();
 
@@ -59,12 +59,14 @@ export function MenuScreen() {
       <div className="profile-card">
         <span className="avatar">{perfil.iniciales}</span>
         <div>
-          <b>{perfil.nombre}</b>
+          <b>{sesion?.nombre || perfil.nombre}</b>
           <small>
             {nombresDeRol[rol]} · {perfil.ubicacion}
           </small>
         </div>
-        <button>Editar</button>
+        <span className="mode-badge">
+          {sesion?.modo === "http" ? "Servidor" : "Datos locales"}
+        </span>
       </div>
       <p className="menu-label">
         FUNCIONES DE {nombresDeRol[rol].toUpperCase()}
@@ -94,6 +96,18 @@ export function MenuScreen() {
             <UserRound />
           </i>
           <span>Cambiar de rol</span>
+          <ChevronRight />
+        </button>
+        <button
+          onClick={() => {
+            cerrarSesion();
+            navigate(rutas.roles);
+          }}
+        >
+          <i>
+            <UserRound />
+          </i>
+          <span>Cerrar sesión local</span>
           <ChevronRight />
         </button>
       </div>

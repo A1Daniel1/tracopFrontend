@@ -1,9 +1,12 @@
 import { createContext, useContext } from "react";
-import type { Rol } from "@/shared/types";
+import type { Rol, Sesion } from "@/shared/types";
 
 export type RoleContextValue = {
   rol: Rol | null;
   elegirRol: (rol: Rol) => void;
+  sesion: Sesion | null;
+  iniciarSesion: (sesion: Sesion) => void;
+  cerrarSesion: () => void;
 };
 
 export const RoleContext = createContext<RoleContextValue | null>(null);

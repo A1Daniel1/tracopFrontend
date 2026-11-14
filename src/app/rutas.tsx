@@ -32,6 +32,7 @@ const raices = new Set([
 const pantallaPorPath: Record<string, string> = {
   "/": "roles",
   "/entrar": "login",
+  "/registro": "login",
   "/productor": "home",
   "/productor/publicar": "publish",
   "/productor/confirmar": "confirm-offer",

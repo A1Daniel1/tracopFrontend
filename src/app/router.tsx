@@ -4,6 +4,7 @@ import { MenuScreen } from "./MenuScreen";
 import { RequireRole } from "./RequireRole";
 import { RoleSelection } from "@/features/auth/RoleSelection";
 import { Login } from "@/features/auth/Login";
+import { Register } from "@/features/auth/Register";
 import { VoicePrices } from "@/features/assistant/VoicePrices";
 import { Catalog } from "@/features/catalog/Catalog";
 import { OfferDetail } from "@/features/catalog/OfferDetail";
@@ -34,6 +35,7 @@ export function AppRouter() {
           </RequireRole>
         }
       />
+      <Route path="/registro" element={<Register />} />
 
       <Route element={<RequireRole rol="productor" />}>
         <Route element={<Layout />}>
