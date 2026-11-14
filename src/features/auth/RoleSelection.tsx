@@ -24,7 +24,10 @@ export function RoleSelection() {
   return (
     <div className="splash">
       <div className="splash-art">
-        <img src={fotos.cosecha} alt="Productor agrícola con su cosecha" />
+        <img
+          src={fotos.paisaje}
+          alt="Cultivos y montañas de Guayabal, Tolima"
+        />
         <div className="splash-overlay" />
         <div className="brand-lockup">
           <AppIcon />

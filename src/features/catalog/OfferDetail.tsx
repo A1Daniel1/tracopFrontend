@@ -17,7 +17,7 @@ export function OfferDetail() {
   return (
     <>
       <div className="detail-photo">
-        <img src={fotos.producto} alt="Aguacate Hass fresco" />
+        <img src={fotos.aguacate} alt="Aguacates Hass organizados en cajas" />
         <span>FRUTA · DISPONIBLE</span>
       </div>
       <div className="offer-detail-head">

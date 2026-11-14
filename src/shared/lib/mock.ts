@@ -3,11 +3,13 @@ import type { Flete, Oferta, Pedido } from "@/shared/types";
 /** Capa mock: datos de ejemplo separados de los componentes. */
 export const usarMock = import.meta.env.VITE_USE_MOCK !== "false";
 
+const imagePath = (fileName: string) =>
+  `${import.meta.env.BASE_URL}images/${fileName}`;
+
 export const fotos = {
-  cosecha:
-    "https://images.unsplash.com/photo-1545830790-68595959c491?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900",
-  producto:
-    "https://images.unsplash.com/photo-1551649001-7a2482d98d05?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=900",
+  paisaje: imagePath("colombian-cropland.jpg"),
+  aguacate: imagePath("avocado-crates.jpg"),
+  productosFrescos: imagePath("fresh-produce-crate.jpg"),
 };
 
 export const perfil = {
@@ -46,6 +48,7 @@ export const ofertas: Oferta[] = [
     precioPorKg: 7400,
     municipio: "Filandia, Quindío",
     categoria: "FRUTA",
+    imagen: fotos.aguacate,
     sincronizacion: "pendiente",
   },
   {
@@ -55,6 +58,7 @@ export const ofertas: Oferta[] = [
     precioPorKg: 3200,
     municipio: "Montenegro",
     categoria: "VERDURA",
+    imagen: fotos.productosFrescos,
     sincronizacion: "sincronizado",
   },
 ];

@@ -10,7 +10,7 @@ export function OfferCard({ synced = false }: { synced?: boolean }) {
 
   return (
     <button className="offer-card" onClick={() => go("offer-detail")}>
-      <img src={fotos.producto} alt="Producto fresco" />
+      <img src={fotos.aguacate} alt="Aguacates Hass organizados en cajas" />
       <div className="offer-card-body">
         <div>
           <span className="category">{oferta.categoria}</span>

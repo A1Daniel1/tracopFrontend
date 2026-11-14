@@ -107,6 +107,7 @@ Repository configuration and direct-route behavior are described in [docs/GITHUB
 
 - [Functional frontend and proposed backend contracts](docs/FRONTEND_FUNCTIONAL.md)
 - [GitHub Pages deployment](docs/GITHUB_PAGES.md)
+- [Image sources and licenses](docs/IMAGE_CREDITS.md)
 - [UX/UI audit](docs/UX_AUDIT.md)
 
 ## Git workflow

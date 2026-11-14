@@ -168,7 +168,12 @@ export function Catalog() {
           key={item.id}
         >
           <img
-            src={item.imagen || fotos.producto}
+            src={
+              item.imagen ||
+              (item.categoria === "FRUTA"
+                ? fotos.aguacate
+                : fotos.productosFrescos)
+            }
             alt={`Producto: ${item.producto}`}
             loading="lazy"
           />

@@ -24,7 +24,7 @@ export function ConfirmOffer() {
         </span>
       </div>
       <div className="offer-preview">
-        <img src={fotos.producto} alt="Cosecha de verduras frescas" />
+        <img src={fotos.aguacate} alt="Aguacates Hass organizados en cajas" />
         <div className="offer-fields">
           {fields.map(([label, value]) => (
             <label key={label}>
