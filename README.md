@@ -1,85 +1,121 @@
-# TRACOP
+# TRACOP Web
 
-TRACOP is an agricultural logistics platform that connects three roles in Colombia:
+TRACOP is a mobile-first agricultural marketplace for Colombia. It connects producers who publish harvests, buyers who discover products and place orders, and carriers who coordinate pickup and delivery.
 
-- **Productor** (producer) — publishes harvests and fresh produce for sale.
-- **Transportista** (transporter) — accepts freight and moves goods between producers and buyers.
-- **Comprador** (buyer) — discovers fresh produce and places orders.
+The web application is currently designed to run as a complete frontend demonstration without a backend. Development data is explicitly labeled and stored in the browser. Domain services and an HTTP adapter are ready to connect to the team's API after its contracts are approved.
 
-Key product capabilities:
+## Live application
 
-- **Voice-first publishing** — producers publish offers by voice ("Publicar por voz").
-- **Offline mode** — the app works without connectivity and surfaces connectivity state.
+Open the current deployment at:
 
-The UI is entirely in **Spanish** (`es`). All user-facing copy, labels, and messages must be written in Spanish.
+**[https://a1daniel1.github.io/tracopFrontend/](https://a1daniel1.github.io/tracopFrontend/)**
 
-## Requirements
+The site is deployed from `main` through GitHub Actions and GitHub Pages. Camera, microphone and geolocation features require HTTPS and browser permission. QR auto-detection depends on `BarcodeDetector` support; manual code entry is available as a fallback.
 
-- Node.js 22+ (see `.mise.toml`)
-- pnpm 10+
+## What can be demonstrated
 
-## Commands
+- Local registration and login with validation, role selection and persistent sessions.
+- Role-based navigation for producers, buyers and carriers.
+- Catalog search, categories, availability, distance filters and sorting.
+- Local creation and editing of produce offers.
+- Local order creation, acceptance, rejection and counteroffers.
+- Pending operation queue with `client_op_id` values for intermittent connectivity.
+- Real browser camera access, QR detection and manual code entry.
+- Photo capture/gallery selection and audio recording/playback.
+- User-approved geolocation and OpenStreetMap visualization.
 
-Run with `pnpm`:
+Mock operations are not presented as server-confirmed transactions. OTP, official prices and state transitions, media storage, QR verification, route calculations and synchronization reconciliation still depend on the backend.
 
-| Command        | Description                                              |
-| -------------- | -------------------------------------------------------- |
-| `pnpm dev`     | Start the Vite dev server (default port `5173`)          |
-| `pnpm build`   | Production build into `dist/`                            |
-| `pnpm preview` | Serve the production build locally (default port `4173`) |
-| `pnpm format`  | Format the project with oxfmt                            |
+## Run locally
 
-## Hosting
+Requirements:
 
-GitHub Pages configuration and repository setup are documented in [docs/GITHUB_PAGES.md](docs/GITHUB_PAGES.md). The user experience review is in [docs/UX_AUDIT.md](docs/UX_AUDIT.md).
+- Node.js 22 or newer
+- pnpm 10 (the repository pins `10.34.3` in `.mise.toml`)
 
-## Functional development mode
+```bash
+pnpm install --frozen-lockfile
+pnpm dev
+```
 
-The working frontend architecture, local adapters, integration contracts and feature inventory are documented in [docs/FRONTEND_FUNCTIONAL.md](docs/FRONTEND_FUNCTIONAL.md). Use `VITE_DATA_MODE=mock` until the backend contracts are approved.
+Vite prints the local URL, normally `http://localhost:5173`. Browser media permissions work most reliably on `localhost` or HTTPS.
+
+### Environment configuration
+
+Copy `.env.example` to `.env.local`:
+
+```env
+VITE_DATA_MODE=mock
+VITE_API_BASE_URL=http://localhost:3000
+```
+
+| Variable            | Purpose                                                               |
+| ------------------- | --------------------------------------------------------------------- |
+| `VITE_DATA_MODE`    | `mock` uses browser persistence; `http` enables domain HTTP adapters. |
+| `VITE_API_BASE_URL` | Base URL for the external API. Required only in HTTP mode.            |
+
+HTTP mode should be enabled only after the backend contracts, authentication strategy and CORS policy are agreed. The frontend does not silently fall back to mock data when an HTTP request fails.
+
+## Quality commands
+
+```bash
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm build
+pnpm format:check
+```
+
+`pnpm build` generates the production bundle in `dist/` with the `/tracopFrontend/` base path required by GitHub Pages.
+
+## Architecture
+
+```text
+React screens and hooks
+        │
+Domain services: auth, catalog, offers and orders
+        │
+        ├── mock adapter: localStorage + development dataset
+        └── HTTP adapter: centralized client + response parsers
+                               │
+                         external apps/api
+
+Offline-compatible actions → local queue → backend sync contract
+```
+
+Important locations:
+
+| Path                          | Responsibility                                                   |
+| ----------------------------- | ---------------------------------------------------------------- |
+| `src/app/`                    | Routing, role/session context and application shell.             |
+| `src/features/`               | Screens grouped by business capability.                          |
+| `src/services/`               | Domain adapters for mock and HTTP data access.                   |
+| `src/shared/http/`            | Central HTTP client, error normalization and runtime parsers.    |
+| `src/shared/offline/`         | Connectivity state and pending operation queue.                  |
+| `src/shared/maps/`            | Browser geolocation and map presentation.                        |
+| `docs/FRONTEND_FUNCTIONAL.md` | Feature inventory, proposed API contracts and backend checklist. |
+
+Browser persistence is intended only for non-sensitive development data. Production credentials, tokens, photos and audio must not be stored in `localStorage`.
+
+## Deployment
+
+The public site uses GitHub Pages only. `.github/workflows/deploy-pages.yml` runs quality checks, builds the application, prepares the SPA fallback and deploys when `main` changes.
+
+Repository configuration and direct-route behavior are described in [docs/GITHUB_PAGES.md](docs/GITHUB_PAGES.md).
+
+## Documentation
+
+- [Functional frontend and proposed backend contracts](docs/FRONTEND_FUNCTIONAL.md)
+- [GitHub Pages deployment](docs/GITHUB_PAGES.md)
+- [UX/UI audit](docs/UX_AUDIT.md)
 
 ## Git workflow
 
-- Branch flow: `feature/*` → `develop` → `main`.
-- Create a `feature/<name>` branch off `develop`; merge it back to `develop` when done. `develop` is promoted to `main` on release.
-- Use Conventional Commits: `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `style:`, `test:`, `build:`, `ci:`, `perf:`.
-- Keep commits small and focused.
+The normal collaboration flow is `feature/* → develop → main`. Use Conventional Commits and keep tests with the behavior they verify. The interface language is Spanish (`es`), while engineering documentation is maintained in English.
 
-## Security
+## Current limitations
 
-- **Never commit secrets or credentials**, including AWS keys (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`), API tokens, or passwords.
-- Use environment variables or a git-ignored local file for secrets. Client-exposed values go through `import.meta.env` prefixed with `VITE_` — never expose backend secrets to the client.
-
-## Domain: order states
-
-An order (pedido) progresses through these states, in order:
-
-1. `solicitado` — requested
-2. `aceptado` — accepted
-3. `en camino` — on the way
-4. `entregado` — delivered
-5. `pagado` — paid
-
-## Project structure
-
-- `src/main.tsx` - React entrypoint; imports `src/index.css` and mounts `src/App.tsx` into the `#root` element.
-- `src/App.tsx` - Primary application component. This is currently a single large file holding every screen and the role-based flow. When adding features, extract components rather than growing this file further.
-- `src/index.css` - Global CSS entrypoint and Tailwind CSS v4 import.
-- `index.html` - Vite HTML shell containing the `#root` element and loading `src/main.tsx`.
-- `package.json` - Project dependencies and scripts.
-- `vite.config.ts` - Vite config (React, Tailwind v4, and the `@` → `src` alias).
-- `.mise.toml` - Toolchain versions (Node 22, pnpm 10).
-
-## Dependencies
-
-- Runtime: React 19, React DOM 19, and lucide-react (icons).
-- Styling: Tailwind CSS v4 via the `@tailwindcss/vite` plugin.
-- Build tooling: Vite 8, TypeScript 5.7, and `@vitejs/plugin-react`.
-- Formatting: oxfmt.
-
-## Styling
-
-This project uses **Tailwind CSS v4** through the `@tailwindcss/vite` plugin. `src/index.css` imports Tailwind with `@import 'tailwindcss';`. Use Tailwind utility classes directly in JSX and put global CSS or Tailwind v4 theme customization in `src/index.css`. No Tailwind or PostCSS config file is needed.
-
-`src/main.tsx` imports `src/index.css`, so global font wiring belongs in `src/index.css`. Keep CSS `@import` statements first, then any `@font-face` rules and font-family defaults.
-
-Tailwind emits utility classes in `@layer utilities`, and CSS outside any cascade layer overrides every layer regardless of specificity. Put global element styles (resets and defaults for `body`, headings, `button`, `input`) inside `@layer base { ... }` so utility classes on those elements still apply.
+- Backend modules are not part of this repository.
+- Camera, microphone, QR and geolocation require manual testing on supported browsers and Android devices.
+- The mock adapter is a development tool, not a production authentication or transaction system.
+- Shared types are provisional until the team publishes a versioned `packages/shared` contract.
