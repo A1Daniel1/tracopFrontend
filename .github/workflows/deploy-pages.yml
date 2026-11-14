@@ -1,0 +1,98 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      pages: read
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.3
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Type check
+        run: pnpm typecheck
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Build site
+        run: pnpm build
+
+      - name: Prepare SPA route fallback
+        run: |
+          test -s dist/index.html
+          test -s dist/favicon.png
+          grep -q '/tracopFrontend/assets/' dist/index.html
+          cp dist/index.html dist/404.html
+          test -s dist/404.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Verify published entry and direct route fallback
+        env:
+          SITE_URL: ${{ steps.deployment.outputs.page_url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          site_url="${SITE_URL%/}/"
+          curl --fail --silent --show-error --retry 5 --retry-all-errors --retry-delay 5 --max-time 20 "$site_url" -o /tmp/tracop-index.html
+          grep -q '<div id="root"></div>' /tmp/tracop-index.html
+
+          status=$(curl --silent --show-error --output /tmp/tracop-deep-route.html --write-out '%{http_code}' "${site_url}comprador/pedidos")
+          case "$status" in
+            200|404) ;;
+            *) echo "Unexpected HTTP status for direct route: $status" >&2; exit 1 ;;
+          esac
+          grep -q '<div id="root"></div>' /tmp/tracop-deep-route.html
+          grep -q '/tracopFrontend/assets/' /tmp/tracop-deep-route.html
