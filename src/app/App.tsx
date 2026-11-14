@@ -10,7 +10,7 @@ export default function App() {
 
   return (
     <RoleProvider>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <AppRouter />
       </BrowserRouter>
     </RoleProvider>
