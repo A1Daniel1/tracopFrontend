@@ -14,12 +14,16 @@ import { useNavegacion } from "@/app/useNavegacion";
 import { formatKg, formatPrecio } from "@/shared/lib/format";
 import { perfil, productoPrincipal } from "@/shared/lib/mock";
 import { Button, Confirmar, StatusStepper } from "@/shared/ui";
+import { ordersService } from "@/services/orders";
 
 export function OrderDetail() {
   const go = useNavegacion();
   const { rol } = useRole();
   const [accepted, setAccepted] = useState(false);
   const [confirmando, setConfirmando] = useState(false);
+  const [counterValue, setCounterValue] = useState("");
+  const [feedback, setFeedback] = useState("");
+  const order = ordersService.list()[0];
 
   return (
     <>
@@ -71,7 +75,14 @@ export function OrderDetail() {
               <b>Contraoferta recibida</b>María propone entregar el jueves por
               la mañana.
             </span>
-            <button>Aceptar</button>
+            <button
+              onClick={() => {
+                ordersService.updateState(order.id, "aceptado");
+                setFeedback("Contraoferta aceptada localmente.");
+              }}
+            >
+              Aceptar
+            </button>
           </div>
           <div className="tracking-card">
             <div className="map-pattern">
@@ -104,9 +115,39 @@ export function OrderDetail() {
           <Button onClick={() => setConfirmando(true)} icon={<Check />}>
             {accepted ? "Pedido aceptado" : "Aceptar pedido"}
           </Button>
+          <Button
+            variant="danger"
+            onClick={() => {
+              ordersService.recordDecision(order.id, "reject");
+              setFeedback(
+                "Rechazo guardado localmente; en modo HTTP requiere confirmación del servidor.",
+              );
+            }}
+          >
+            Rechazar pedido
+          </Button>
           <div className="counter-row">
-            <Button variant="secondary">Contraofertar precio</Button>
-            <Button variant="secondary">Cambiar fecha</Button>
+            <label className="inline-price">
+              Contraoferta
+              <input
+                inputMode="numeric"
+                placeholder="Valor COP"
+                value={counterValue}
+                onChange={(event) => setCounterValue(event.target.value)}
+              />
+            </label>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                const value = Number(counterValue.replace(/\D/g, ""));
+                if (value > 0) {
+                  ordersService.counterOffer(order.id, value);
+                  setFeedback("Contraoferta guardada localmente.");
+                } else setFeedback("Escribe un valor válido.");
+              }}
+            >
+              Enviar contraoferta
+            </Button>
           </div>
           {accepted && (
             <Button
@@ -126,10 +167,17 @@ export function OrderDetail() {
         confirmarLabel="Aceptar pedido"
         onCancelar={() => setConfirmando(false)}
         onConfirmar={() => {
+          ordersService.updateState(order.id, "aceptado");
           setAccepted(true);
           setConfirmando(false);
+          setFeedback("Pedido aceptado localmente.");
         }}
       />
+      {feedback && (
+        <p className="operation-feedback" role="status">
+          {feedback}
+        </p>
+      )}
     </>
   );
 }

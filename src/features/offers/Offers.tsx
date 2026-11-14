@@ -5,13 +5,17 @@ import { formatKg, formatPrecio } from "@/shared/lib/format";
 import { ofertas } from "@/shared/lib/mock";
 import { EstadoVacio, SyncChip } from "@/shared/ui";
 import { OfferCard } from "./OfferCard";
+import { offersService } from "@/services/offers";
+import { useNavigate } from "react-router-dom";
 
 type Tab = "activas" | "pausadas" | "vendidas";
 
 export function Offers() {
   const go = useNavegacion();
+  const navigate = useNavigate();
   const [tab, setTab] = useState<Tab>("activas");
   const tomate = ofertas[1];
+  const localOffers = offersService.listLocal();
 
   return (
     <>
@@ -39,12 +43,31 @@ export function Offers() {
       {tab === "activas" ? (
         <>
           <div className="list-heading">
-            <span>4 ofertas</span>
+            <span>{localOffers.length + 2} ofertas de desarrollo</span>
             <button>
               <SlidersHorizontal /> Ordenar
             </button>
           </div>
           <OfferCard />
+          {localOffers.map((offer) => (
+            <div className="simple-offer" key={offer.id}>
+              <span className="produce-icon">{offer.producto.charAt(0)}</span>
+              <div>
+                <b>{offer.producto}</b>
+                <small>
+                  {formatKg(offer.cantidadKg)} ·{" "}
+                  {formatPrecio(offer.precioPorKg)}/kg · {offer.municipio}
+                </small>
+                <SyncChip state={offer.sincronizacion} />
+              </div>
+              <button
+                className="small-action"
+                onClick={() => navigate(`/productor/publicar?id=${offer.id}`)}
+              >
+                Editar
+              </button>
+            </div>
+          ))}
           <div className="simple-offer">
             <span className="produce-icon">T</span>
             <div>

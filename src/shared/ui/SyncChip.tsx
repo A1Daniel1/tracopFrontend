@@ -2,7 +2,7 @@ import { Check, Clock3, CloudOff } from "lucide-react";
 import type { EstadoSincronizacion } from "@/shared/types";
 
 const labels: Record<EstadoSincronizacion, string> = {
-  guardado: "Guardado en el teléfono",
+  guardado: "Guardado localmente",
   pendiente: "Pendiente de sincronizar",
   sincronizado: "Sincronizado",
 };

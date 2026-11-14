@@ -8,6 +8,7 @@ import {
 } from "@/shared/lib/format";
 import { fotos, perfil, productoPrincipal } from "@/shared/lib/mock";
 import { Button, Confirmar } from "@/shared/ui";
+import { ordersService } from "@/services/orders";
 
 export function OfferDetail() {
   const go = useNavegacion();
@@ -77,7 +78,17 @@ export function OfferDetail() {
         descripcion={`Pedirás ${formatKg(productoPrincipal.cantidadKg)} de ${productoPrincipal.nombre} por ${formatPrecio(productoPrincipal.total)}.`}
         confirmarLabel="Confirmar pedido"
         onCancelar={() => setConfirmando(false)}
-        onConfirmar={() => go("orders")}
+        onConfirmar={() => {
+          ordersService.create({
+            producto: productoPrincipal.nombre,
+            cantidadKg: productoPrincipal.cantidadKg,
+            total: productoPrincipal.total,
+            estado: "solicitado",
+            contraparte: perfil.nombre,
+            fecha: "Pendiente de acordar",
+          });
+          go("orders");
+        }}
       />
     </>
   );
