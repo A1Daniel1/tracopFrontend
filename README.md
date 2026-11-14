@@ -33,6 +33,10 @@ Run with `pnpm`:
 
 GitHub Pages configuration and repository setup are documented in [docs/GITHUB_PAGES.md](docs/GITHUB_PAGES.md). The user experience review is in [docs/UX_AUDIT.md](docs/UX_AUDIT.md).
 
+## Functional development mode
+
+The working frontend architecture, local adapters, integration contracts and feature inventory are documented in [docs/FRONTEND_FUNCTIONAL.md](docs/FRONTEND_FUNCTIONAL.md). Use `VITE_DATA_MODE=mock` until the backend contracts are approved.
+
 ## Git workflow
 
 - Branch flow: `feature/*` → `develop` → `main`.
