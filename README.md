@@ -29,6 +29,10 @@ Run with `pnpm`:
 | `pnpm preview` | Serve the production build locally (default port `4173`) |
 | `pnpm format`  | Format the project with oxfmt                            |
 
+## Hosting
+
+GitHub Pages configuration and repository setup are documented in [docs/GITHUB_PAGES.md](docs/GITHUB_PAGES.md). The user experience review is in [docs/UX_AUDIT.md](docs/UX_AUDIT.md).
+
 ## Git workflow
 
 - Branch flow: `feature/*` → `develop` → `main`.
